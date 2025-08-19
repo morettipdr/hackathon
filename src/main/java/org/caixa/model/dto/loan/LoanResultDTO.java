@@ -1,8 +1,10 @@
-package org.caixa.model.dto;
+package org.caixa.model.dto.loan;
 
 import lombok.Getter;
 import lombok.Setter;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -13,5 +15,5 @@ public class LoanResultDTO {
     private String tipo;
 
     @Schema(description = "Parcelas do empréstimo")
-    private InstallmentDTO[] parcelas;
+    private List<InstallmentDTO> parcelas;
 }

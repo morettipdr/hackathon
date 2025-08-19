@@ -1,4 +1,4 @@
-package org.caixa.model.dto;
+package org.caixa.model.dto.loan;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,10 +12,10 @@ import java.math.BigDecimal;
 public class LoanResponseDTO {
 
     @Schema(description = "Id do empréstimo", example = "12345")
-    private Integer idSimulacao;
+    private Long idSimulacao;
 
     @Schema(description = "Código do produto", examples = "123")
-    private Integer codigoProduto;
+    private Long codigoProduto;
 
     @Schema(description = "Descrição do produto", example = "Empréstimo Pessoal")
     private String descricaoProduto;

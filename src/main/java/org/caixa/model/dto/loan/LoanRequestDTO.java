@@ -1,4 +1,4 @@
-package org.caixa.model.dto;
+package org.caixa.model.dto.loan;
 
 import lombok.Getter;
 import lombok.Setter;
