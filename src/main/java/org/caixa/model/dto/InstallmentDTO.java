@@ -1,10 +1,8 @@
-package org.caixa.model.dto.loan;
+package org.caixa.model.dto;
 
 import lombok.Getter;
 import lombok.Setter;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-
-import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -15,11 +13,11 @@ public class InstallmentDTO {
     private Integer numero;
 
     @Schema(description = "Valor da amortização", example = "500.00")
-    private BigDecimal valorAmortizacao;
+    private Double valorAmortizacao;
 
     @Schema(description = "Valor dos juros", example = "89.50")
-    private BigDecimal valorJuros;
+    private Double valorJuros;
 
     @Schema(description = "Valor da prestação", example = "589.50")
-    private BigDecimal valorPrestacao;
+    private Double valorPrestacao;
 }

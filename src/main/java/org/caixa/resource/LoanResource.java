@@ -1,26 +1,22 @@
 package org.caixa.resource;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Response;
-import org.caixa.model.dto.loan.LoanRequestDTO;
+import org.caixa.model.dto.LoanRequestDTO;
 import org.caixa.service.LoanService;
 
-@Path("/simulacao")
+@Path("/loan")
 public class LoanResource {
 
     @Inject
     LoanService loanService;
 
     @POST
+    @PermitAll
     public Response requestLoan(LoanRequestDTO request) {
         return Response.ok(loanService.simulateLoan(request)).build();
-    }
-
-    @GET
-    public Response getAllLoans() {
-        return Response.ok(loanService.getAllLoans()).build();
     }
 }
