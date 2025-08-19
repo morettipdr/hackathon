@@ -1,13 +1,11 @@
 package org.caixa.model.dto.loan;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import java.math.BigDecimal;
 
-@Getter
-@Setter
+@Data
 public class LoanRequestDTO {
 
     @Schema(description = "Valor desejado do empréstimo", example = "10000.00")

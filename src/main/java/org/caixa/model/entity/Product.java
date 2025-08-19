@@ -4,16 +4,18 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Data;
 
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "produto", schema = "dbo")
-public class Produto {
+@Table(name = "PRODUTO")
+@Data
+public class Product {
 
     @Id
     @Column(name = "CO_PRODUTO")
-    private Integer codigo;
+    private Long codigo;
 
     @Column(name = "NO_PRODUTO", nullable = false, length = 200)
     private String nome;
