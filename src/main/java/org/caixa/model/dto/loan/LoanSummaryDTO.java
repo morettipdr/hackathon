@@ -21,5 +21,5 @@ public class LoanSummaryDTO {
     private Integer qtdRegistrosPagina;
 
     @Schema(description = "Lista de empréstimos")
-    private List<Loan> registros;
+    private List<LoanDTO> registros;
 }

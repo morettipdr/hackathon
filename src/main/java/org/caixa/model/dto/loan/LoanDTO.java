@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @Schema(description = "Dados do empréstimo")
-public class Loan {
+public class LoanDTO {
 
     @Schema(description = "Id da simulação", example = "12345")
     private Long idSimulacao;

@@ -1,5 +1,6 @@
 package org.caixa.resource;
 
+import io.smallrye.common.constraint.NotNull;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -15,7 +16,7 @@ public class LoanResource {
     LoanService loanService;
 
     @POST
-    public Response requestLoan(LoanRequestDTO request) {
+    public Response requestLoan(@NotNull LoanRequestDTO request) {
         return Response.ok(loanService.simulateLoan(request)).build();
     }
 

@@ -1,5 +1,6 @@
 package org.caixa.model.dto.loan;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -8,6 +9,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@AllArgsConstructor
 @Schema(description = "Resultado da simulação do empréstimo")
 public class LoanResultDTO {
 

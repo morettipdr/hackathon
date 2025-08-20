@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Getter
 @Setter
@@ -24,5 +25,5 @@ public class LoanResponseDTO {
     private BigDecimal taxaJuros;
 
     @Schema(description = "Resultado da simulação")
-    private LoanResultDTO resultadoSimulacao;
+    private List<LoanResultDTO> resultadoSimulacao;
 }
