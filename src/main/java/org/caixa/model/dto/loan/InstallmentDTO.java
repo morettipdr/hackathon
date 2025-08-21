@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 public class InstallmentDTO {
 
     @Schema(description = "Número da parcela", example = "1")
-    private Integer numbero;
+    private Integer numero;
 
     @Schema(description = "Valor da amortização", example = "500.00")
     private BigDecimal valorAmortizacao;

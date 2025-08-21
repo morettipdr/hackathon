@@ -1,10 +1,17 @@
 package org.caixa.model.dto.health;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
 import java.math.BigDecimal;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
-@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 @Schema(description = "Volume de simulações por produto")
 public class LoanVolumeDTO {
 
@@ -15,14 +22,17 @@ public class LoanVolumeDTO {
     private String descricaoProduto;
 
     @Schema(description = "Taxa média de juros das simulações", example = "1.99")
-    private BigDecimal taxaMediaJuro;
+    private BigDecimal taxaMediaJuro = BigDecimal.ZERO;
 
     @Schema(description = "Valor médio da prestação das simulações", example = "500.00")
-    private BigDecimal valorMedioPrestacao;
+    private BigDecimal valorMedioPrestacao = BigDecimal.ZERO;
 
     @Schema(description = "Valor total desejado nas simulações", example = "10000.00")
-    private BigDecimal valorTotalDesejado;
+    private BigDecimal valorTotalDesejado = BigDecimal.ZERO;
 
     @Schema(description = "Valor total do crédito concedido", example = "9800.00")
-    private BigDecimal valorTotalCredito;
+    private BigDecimal valorTotalCredito = BigDecimal.ZERO;
+
+    @Schema(description = "Tipo de simulação (SAC ou PRICE)", example = "SAC")
+    private String tipoSimulacao;
 }

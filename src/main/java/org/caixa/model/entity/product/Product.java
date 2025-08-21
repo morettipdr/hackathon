@@ -1,4 +1,4 @@
-package org.caixa.model.entity;
+package org.caixa.model.entity.product;
 
 import jakarta.persistence.*;
 import lombok.Data;
