@@ -1,79 +1,169 @@
-# code-with-quarkus
+# Serviço Hackathon (Quarkus)
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+Serviço REST baseado em Quarkus com Hibernate ORM, JDBC e integrações com Azure (Event Hubs). Executa localmente com conveniências de desenvolvimento e em produção com um banco de dados externo.
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+- Framework: Quarkus
+- Build: Maven Wrapper
+- Empacotamento: Fast-jar e imagem Docker
+- Banco: H2 para dev; SQL Server para prod (configurável)
+- Saúde: `/q/health`, `/q/metrics` (se habilitado)
+- Documentação dos endpoints e DTOs: Swagger UI `/q/swagger-ui`
 
-## Running the application in dev mode
+## Requisitos
 
-You can run your application in dev mode that enables live coding using:
+- Java 21+
+- Docker e Docker Compose
 
-```shell script
+## Estrutura do projeto
+
+- `src/main/java` — código da aplicação
+- `src/main/resources/application.properties` — configuração
+- `Dockerfile` — definição da imagem do container
+- `docker-compose.yml` — orquestração local
+- `/docs` — Postman Collection
+
+## Executando localmente (modo dev)
+
+Hot-reload, Dev UI e banco em memória por padrão.
+
+```bash
+# iniciar
 ./mvnw quarkus:dev
+
+# Dev UI
+http://localhost:8080/q/dev
 ```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
+## Empacotamento
 
-## Packaging and running the application
+```bash
+# fast-jar (padrão)
+./mvnw clean package
 
-The application can be packaged using:
-
-```shell script
-./mvnw package
+# executar localmente
+java -jar target/quarkus-app/quarkus-run.jar
 ```
 
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
+## Configuração
 
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
+Use variáveis de ambiente ou `application.properties`. Variáveis comuns:
 
-If you want to build an _über-jar_, execute the following command:
+```properties
+# H2 em memória
+quarkus.datasource.db-kind=h2
+quarkus.datasource.jdbc.url=jdbc:h2:mem:default;DB_CLOSE_DELAY=-1
+quarkus.hibernate-orm.log.sql=true
 
-```shell script
-./mvnw package -Dquarkus.package.jar.type=uber-jar
+# SQL Server externo (exemplo)
+%prod.quarkus.datasource.product.db-kind=mssql
+%prod.quarkus.datasource.product.jdbc.url=${PRODUCT_JDBC_URL}
+%prod.quarkus.datasource.product.username=${PRODUCT_DB_USERNAME}
+%prod.quarkus.datasource.product.password=${PRODUCT_DB_PASSWORD}
+%prod.quarkus.hibernate-orm."product".datasource=product
+
+# Log de acesso
+quarkus.http.access-log.enabled=true
+quarkus.http.access-log.pattern=combined
 ```
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
+### Construir e executar com Docker
 
-## Creating a native executable
+```bash
+# empacotar o app
+./mvnw package -DskipTests
 
-You can create a native executable using:
+# construir imagem (observe o ponto final)
+docker build -t quarkus/hackathon -f Dockerfile .
 
-```shell script
-./mvnw package -Dnative
+# executar com arquivo de env e mapeamento de porta
+docker run --rm -p 8080:8080 --env-file .env quarkus/hackathon
 ```
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
+## Docker Compose
 
-```shell script
-./mvnw package -Dnative -Dquarkus.native.container-build=true
+O Compose constrói a imagem e executa o container com suas variáveis de ambiente.
+
+Comandos:
+
+```bash
+# construir e subir
+docker compose up
+
+# parar
+docker compose down
 ```
 
-You can then execute your native executable with: `./target/code-with-quarkus-1.0.0-SNAPSHOT-runner`
+## Exemplo de `.env`
 
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/maven-tooling>.
+Observe as aspas para URLs JDBC que contêm `;`.
 
-## Related Guides
+`.env`
+```properties
+QUARKUS_PROFILE=prod
+PRODUCT_JDBC_URL='jdbc:sqlserver://<server>.database.windows.net:1433;databaseName=<db>;encrypt=true;TrustServerCertificate=false;loginTimeout=30'
+PRODUCT_DB_USERNAME='<user>'
+PRODUCT_DB_PASSWORD='<password>'
 
-- REST ([guide](https://quarkus.io/guides/rest)): A Jakarta REST implementation utilizing build time processing and Vert.x. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it.
-- JDBC Driver - H2 ([guide](https://quarkus.io/guides/datasource)): Connect to the H2 database via JDBC
-- REST Jackson ([guide](https://quarkus.io/guides/rest#json-serialisation)): Jackson serialization support for Quarkus REST. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it
-- Hibernate ORM with Panache ([guide](https://quarkus.io/guides/hibernate-orm-panache)): Simplify your persistence code for Hibernate ORM via the active record or the repository pattern
-- Quarkus Support Azure Event Hubs ([guide](https://docs.quarkiverse.io/quarkus-azure-services/dev/quarkus-azure-eventhubs.html)): Interacts with Azure Event Hubs through the Azure SDK for Java
+# Opcional: Azure Event Hubs
+EVENTHUB_CONNECTION_STRING='<connection-string>'
+EVENTHUB_NAME='simulacoes'
+```
 
-## Provided Code
+## Saúde, métricas e logs
 
-### Hibernate ORM
+- Métricas (se habilitado): `GET /q/metrics`
 
-Create your first JPA entity
+## Segurança (futuro: validação de token OIDC)
 
-[Related guide section...](https://quarkus.io/guides/hibernate-orm)
+Adicione OIDC para validar tokens bearer (Keycloak, Azure AD, etc.):
 
-[Related Hibernate with Panache section...](https://quarkus.io/guides/hibernate-orm-panache)
+- Adicionar extensão:
+```bash
+./mvnw quarkus:add-extension -Dextensions="oidc,smallrye-jwt"
+```
 
+- Configurar:
+```properties
+# Exemplo Azure AD
+%prod.quarkus.oidc.auth-server-url=https://login.microsoftonline.com/<tenant-id>/v2.0
+%prod.quarkus.oidc.client-id=<client-id>
+%prod.quarkus.oidc.credentials.secret=<client-secret>
+%prod.quarkus.oidc.application-type=service
+%prod.quarkus.oidc.token.audience=api://<audience>
 
-### REST
+# Proteger todos os endpoints por padrão
+quarkus.http.auth.permission.authenticated.paths=/*
+quarkus.http.auth.permission.authenticated.policy=authenticated
+```
 
-Easily start your REST Web Services
+- Proteger endpoints usando JAX-RS e anotações:
+```java
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
 
-[Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
+@Path("/secure")
+public class SecureResource {
+  @GET
+  @RolesAllowed({"user","admin"})
+  public String ping() { return "ok"; }
+}
+```
+
+## Testes
+
+- Unitários e REST com JUnit 5 e REST Assured.
+- Integração com Testcontainers (container MSSQL) para imitar produção.
+- Testes de contrato para APIs conforme necessário.
+
+## Observabilidade
+
+- Endpoints para observabilidade já implementados.
+- Utilização de micrometer para métricas.
+- Para o futuro, é possível configurar um exportador Prometheus ou integração com sistemas de monitoramento.
+
+## CI/CD
+
+- Construa, teste e publique imagens Docker via GitHub Actions.
+- Use builds Docker multi-stage e tags imutáveis.
+- Faça scan de vulnerabilidades nas imagens.

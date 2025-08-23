@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: quarkus/hackathon
+    env_file:
+      - .env
+    environment:
+      QUARKUS_PROFILE: prod
+    ports:
+      - "8080:8080"
+    restart: unless-stopped

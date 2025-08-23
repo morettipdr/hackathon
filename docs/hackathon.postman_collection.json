@@ -1,0 +1,142 @@
+{
+	"info": {
+		"_postman_id": "655c6fe4-e9f8-4fe3-8c7b-cf27363ddf14",
+		"name": "hackathon",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43539581",
+		"_collection_link": "https://pedroaugustomorettimoreira.postman.co/workspace/Pedro-Augusto-Moretti-Moreira's~1ef4c0e5-836c-4cc9-8ab4-88753c60c7f1/collection/43539581-655c6fe4-e9f8-4fe3-8c7b-cf27363ddf14?action=share&source=collection_link&creator=43539581"
+	},
+	"item": [
+		{
+			"name": "simulacao",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"valorDesejado\": 19230.30,\n    \"prazo\": 27\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{docker}}/simulacao",
+					"host": [
+						"{{docker}}"
+					],
+					"path": [
+						"simulacao"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "simulacao",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{docker}}/simulacao?pageSize=1&page=1",
+					"host": [
+						"{{docker}}"
+					],
+					"path": [
+						"simulacao"
+					],
+					"query": [
+						{
+							"key": "pageSize",
+							"value": "1"
+						},
+						{
+							"key": "page",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "volume",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{docker}}/health/volume?idProduto=1&data=2025-08-23",
+					"host": [
+						"{{docker}}"
+					],
+					"path": [
+						"health",
+						"volume"
+					],
+					"query": [
+						{
+							"key": "idProduto",
+							"value": "1"
+						},
+						{
+							"key": "data",
+							"value": "2025-08-23"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "telemetria",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{docker}}/health/telemetria",
+					"host": [
+						"{{docker}}"
+					],
+					"path": [
+						"health",
+						"telemetria"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "http://localhost:8080"
+		},
+		{
+			"key": "docker",
+			"value": "http://0.0.0.0:8080/"
+		}
+	]
+}
