@@ -20,7 +20,7 @@ public class InstallmentDTO {
     private BigDecimal valorAmortizacao;
 
     @Schema(description = "Valor dos juros", example = "89.50")
-    private BigDecimal taxaJuros;
+    private BigDecimal valorJuros;
 
     @Schema(description = "Valor da prestação", example = "589.50")
     private BigDecimal valorPrestacao;

@@ -112,14 +112,14 @@ public class LoanService {
         loanSimulation.setTaxaJuro(product.getTaxaJuros());
 
         BigDecimal operationStart = BigDecimal.ONE.add(interestRate).pow(time);
-        BigDecimal installmentValue = value.multiply((operationStart.multiply(interestRate)).divide(operationStart.subtract(BigDecimal.ONE), RoundingMode.HALF_UP));
+        BigDecimal installmentValue = value.multiply((operationStart.multiply(interestRate)).divide(operationStart.subtract(BigDecimal.ONE), RoundingMode.HALF_UP)).setScale(2, RoundingMode.HALF_UP);
         BigDecimal totalInstallmentValue = installmentValue.multiply(BigDecimal.valueOf(time));
 
         List<InstallmentDTO> installments = new ArrayList<>();
-        for (int i = 1; i < time; i++) {
-            BigDecimal interest = value.multiply(interestRate);
-            BigDecimal amortization = installmentValue.subtract(interest).setScale(2, RoundingMode.HALF_UP);
-            installments.add(new InstallmentDTO(i, amortization, interest.setScale(2, RoundingMode.HALF_UP), installmentValue.setScale(2, RoundingMode.HALF_UP)));
+        for (int i = 1; i <= time; i++) {
+            BigDecimal interest = value.multiply(interestRate).setScale(2, RoundingMode.HALF_UP);
+            BigDecimal amortization = installmentValue.subtract(interest);
+            installments.add(new InstallmentDTO(i, amortization, interest, installmentValue));
             value = value.subtract(amortization);
         }
         
