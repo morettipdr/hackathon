@@ -4,7 +4,7 @@ import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import net.bytebuddy.asm.Advice;
+import org.caixa.eventhub.Sender;
 import org.caixa.mapper.LoanSimulationMapper;
 import org.caixa.model.dto.loan.*;
 import org.caixa.model.entity.loan.LoanSimulation;
@@ -31,13 +31,19 @@ public class LoanService {
     @Inject
     LoanSimulationMapper loanSimulationMapper;
 
+    @Inject
+    Sender sender;
+
     public LoanResponseDTO simulateLoan(LoanRequestDTO request) {
         Log.info("Iniciando simulacao de empréstimo: " + request);
         Product product = productRepository.findByValue(request);
         LoanResponseDTO loanResponseDTO = new LoanResponseDTO();
-        loanResponseDTO.setCodigoProduto(product.getId());
+        loanResponseDTO.setCodigoProduto(Long.valueOf(product.getId()));
         loanResponseDTO.setTaxaJuros(product.getTaxaJuros().setScale(4, RoundingMode.HALF_UP));
         loanResponseDTO.setResultadoSimulacao(getLoanResults(request, product));
+
+        sender.publishEvents(loanResponseDTO);
+
         return loanResponseDTO;
     }
 
@@ -67,7 +73,7 @@ public class LoanService {
         Log.info("Calculando parcelas SAC para value: " + value + ", taxa de juros: " + interestRate + ", time: " + time);
 
         loanSimulation.setValorDesejado(value);
-        loanSimulation.setCodigoProduto(product.getId());
+        loanSimulation.setCodigoProduto(Long.valueOf(product.getId()));
         loanSimulation.setTaxaJuro(product.getTaxaJuros());
 
         BigDecimal amortization = value.divide(BigDecimal.valueOf(time), RoundingMode.HALF_UP);
@@ -102,7 +108,7 @@ public class LoanService {
         Log.info("Calculando parcela PRICE para value: " + value + ", taxa de juros: " + interestRate + ", time: " + time);
 
         loanSimulation.setValorDesejado(value);
-        loanSimulation.setCodigoProduto(product.getId());
+        loanSimulation.setCodigoProduto(Long.valueOf(product.getId()));
         loanSimulation.setTaxaJuro(product.getTaxaJuros());
 
         BigDecimal operationStart = BigDecimal.ONE.add(interestRate).pow(time);

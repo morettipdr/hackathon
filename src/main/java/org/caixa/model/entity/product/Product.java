@@ -16,7 +16,7 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CO_PRODUTO")
     @Schema(description = "Código do produto", example = "1")
-    private Long id;
+    private Integer id;
 
     @Column(name = "NO_PRODUTO", nullable = false, length = 200)
     @Schema(description = "Nome do produto", example = "Produto 1")
